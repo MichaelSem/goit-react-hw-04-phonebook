@@ -1,19 +1,22 @@
+import React from 'react';
 import PropTypes from 'prop-types';
-
-export function Filter({ value, onChange }) {
+import css from './Filter.module.css';
+const Filter = ({ filter }) => {
   return (
-    <label >
-      Find contacts by name
+    <>
+      <p className={css.title}>Find contacts by name</p>
       <input
+        className={css.input}
         type="text"
-        value={value}
-        onChange={onChange}
+        name="filter"
+        pattern="^[a-zA-Zа-яА-Я]+(([' -][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$"
+        onChange={filter}
       />
-    </label>
+    </>
   );
-}
-
-Filter.propTypes = {
-  value: PropTypes.string,
-  onChange: PropTypes.func.isRequired,
 };
+
+Filter.prototype = {
+  filter: PropTypes.func.isRequired,
+};
+export default Filter;

@@ -1,58 +1,55 @@
-import {useState } from "react";
-import PropTypes from "prop-types";
+import { useState } from 'react';
+import shortid from 'shortid';
+import css from './ContactForm.module.css';
 
-export const ContactForm = ({onSubmit}) => {
+export default function ContactForm({ addContacts }) {
   const [name, setName] = useState('');
   const [number, setNumber] = useState('');
 
-  const handleChange = e => {
-      const { name, value } = e.Target;
-      switch (name) {
-        case 'name':
-            setName(value);
-            break;
-
-        case 'number':
-            setNumber(value);
-            break;
-
-    default:
-        return;
-    }
+  const formNameChange = e => {
+    setName(e.currentTarget.value);
   };
-
-  const handleSubmit = e => {
-      e.preventDefault();
-      onSubmit(name, number);
-      setName('');
-      setNumber('');
+  const formNumberChange = e => {
+    setNumber(e.currentTarget.value);
   };
-
-    return (
-          <form onSubmit={handleSubmit}>
-              <label>Name
-                  <input
-                      type="text"
-                      name="name"
-                      value={name}
-                      onChange={handleChange}
-                      placeholder="Name" />
-              </label>
-              <label>Number
-                  <input 
-                      type="text"
-                      name="number"
-                      value={number}
-                      onChange={handleChange}
-                      placeholder="099-00-00" />
-              </label>
-              <button type="submit">
-                      Add contact
-                  </button>
-          </form>
-      )
-  }
-
-ContactForm.propTypes = {
-onSubmit: PropTypes.func.isRequired,
-};
+  const formSubmit = e => {
+    e.preventDefault();
+    addContacts({
+      id: shortid.generate(),
+      name: name,
+      number: number,
+    });
+    e.currentTarget.reset();
+  };
+  return (
+    <div className={css.container}>
+      <form onSubmit={formSubmit}>
+        <p className={css.title}>Name</p>
+        <input
+          className={css.input}
+          placeholder="Jacob Mercer"
+          type="text"
+          name="name"
+          pattern="^[a-zA-Zа-яА-Я]+(([' -][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$"
+          title="Name may contain only letters, apostrophe, dash and spaces. For example Adrian, Jacob Mercer, Charles de Batz de Castelmore d'Artagnan"
+          required
+          onChange={formNameChange}
+        />
+        <p className={css.title}>Number</p>
+        <input
+          className={css.input}
+          placeholder=" 257-42-21"
+          type="tel"
+          name="number"
+          pattern="\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}"
+          title="Phone number must be digits and can contain spaces, dashes, parentheses and can start with +"
+          required
+          onChange={formNumberChange}
+        />
+        <button type="submit" className={css.btnSubmit}>
+          Add contact
+        </button>
+      </form>
+    </div>
+  );
+}
